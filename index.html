@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="color-scheme" content="dark">
+    <title>Happy Birthday!</title>
+    <!-- Google Fonts: Kalligrafik shriftlar -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Parisienne&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            background-color: #060b28;
+        }
+
+        body {
+            background-color: #060b28;
+            background-image: radial-gradient(ellipse at 50% 15%, #1b2d6e 0%, #0d1846 45%, #05081f 100%);
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+
+        /* Yulduzlar uchun fon (Telefon uchun optimallashtirilgan) */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Mayda, ko'p sonli yaltiroq nuqta-yulduzlar */
+        .star-dot {
+            position: absolute;
+            border-radius: 50%;
+            animation: dotTwinkle var(--duration) infinite ease-in-out;
+            animation-delay: var(--delay);
+            transform: translateZ(0);
+        }
+
+        @keyframes dotTwinkle {
+            0%, 100% {
+                opacity: 0.15;
+                transform: scale(0.6);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.15);
+            }
+        }
+
+        /* Chiroyli beshburchakli yulduzchalar (aksent) */
+        .star-sparkle {
+            position: absolute;
+            clip-path: polygon(50% 0%, 61.8% 38.2%, 100% 38.2%, 69.1% 61.8%, 80.9% 100%, 50% 76.4%, 19.1% 100%, 30.9% 61.8%, 0% 38.2%, 38.2% 38.2%);
+            animation: sparkleTwinkle var(--duration) infinite ease-in-out;
+            animation-delay: var(--delay);
+            will-change: transform, opacity;
+            transform: translateZ(0);
+        }
+
+        @keyframes sparkleTwinkle {
+            0%, 100% {
+                opacity: 0.25;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Asosiy konteyner */
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 15px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* 1-sahifa: Asosiy kirish qismi */
+        .welcome-page {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .welcome-page.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            background: linear-gradient(45deg, #ff758c, #ff7eb3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(255, 117, 140, 0.3);
+        }
+
+        p.subtitle {
+            font-size: 1rem;
+            color: #b8b8d0;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        /* Chiroyli tugma */
+        .magic-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.4);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .magic-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 2-sahifa: Maktub qismi */
+        .letter-page {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 92%;
+            max-width: 550px;
+        }
+
+        .letter-page.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .letter-card {
+            background: rgba(10, 10, 24, 0.98);
+            border: 1px solid rgba(255, 117, 140, 0.3);
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 117, 140, 0.15), 0 15px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            max-height: 72vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .letter-card::-webkit-scrollbar {
+            width: 4px;
+        }
+        .letter-card::-webkit-scrollbar-thumb {
+            background: rgba(255, 117, 140, 0.4);
+            border-radius: 10px;
+        }
+
+        .letter-card h2 {
+            font-family: 'French Script MT', 'Parisienne', cursive;
+            font-size: 2.6rem;
+            color: #ff7eb3;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: normal;
+            text-shadow: 0 0 8px rgba(255, 126, 179, 0.4);
+        }
+
+        /* She'r/matn ko'rinadigan hudud */
+        .letter-text {
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-family: 'French Script MT', 'Parisienne', cursive;
+            font-size: 1.4rem;
+            line-height: 1.8;
+            color: #f5f0ff;
+            margin-bottom: 10px;
+            padding: 10px 4px;
+        }
+
+        /* Bir vaqtda faqat bitta gap: teng ravishda paydo bo'ladi va yo'qoladi */
+        .poem-line {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .poem-line.line-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .poem-line.line-exit {
+            opacity: 0;
+            transform: translateY(-16px);
+        }
+
+        /* Harflar chapdan o'ngga o'qilgan sari qizil rangga bo'yaladi */
+        .poem-char {
+            transition: color 0.22s ease, text-shadow 0.22s ease;
+        }
+
+        .poem-char.char-read {
+            color: #ff4d4d;
+            text-shadow: 0 0 6px rgba(255, 77, 77, 0.55);
+        }
+
+        /* Oxirida to'liq maktub */
+        .full-letter {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 1s ease, transform 1s ease;
+            text-align: center;
+            font-family: 'French Script MT', 'Parisienne', cursive;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: #f5f0ff;
+        }
+
+        .full-letter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .letter-card .signature {
+            margin-top: 8px;
+            text-align: center;
+            font-family: 'French Script MT', 'Parisienne', cursive;
+            font-size: 1.8rem;
+            color: #ff758c;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        .letter-card .signature.visible {
+            opacity: 1;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #b8b8d0;
+            padding: 8px 18px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-bottom: max(4px, env(safe-area-inset-bottom));
+            transition: transform 0.3s ease, background 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Kichik ekranli telefonlar uchun (masalan, iPhone SE va shunga o'xshash) */
+        @media (max-width: 360px), (max-height: 640px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            p.subtitle {
+                font-size: 0.9rem;
+            }
+            .magic-btn {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+            .letter-card h2 {
+                font-size: 2rem;
+            }
+            .letter-text {
+                font-size: 1.15rem;
+                min-height: 90px;
+            }
+            .full-letter {
+                font-size: 1.2rem;
+            }
+            .letter-card .signature {
+                font-size: 1.4rem;
+            }
+            .letter-card {
+                padding: 22px 14px;
+                max-height: 68vh;
+            }
+        }
+
+        /* Portlash zarralari */
+        .particle {
+            position: absolute;
+            background: #ff7eb3;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 3;
+            will-change: transform, opacity;
+        }
+
+        /* Diagnostika elementlari (notch/xavfsiz zonaga mos) */
+        .audio-status {
+            position: fixed;
+            top: max(10px, env(safe-area-inset-top));
+            bottom: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.55);
+            background: rgba(0, 0, 0, 0.35);
+            padding: 5px 12px;
+            border-radius: 10px;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .audio-status.show {
+            opacity: 1;
+        }
+
+        .sound-btn {
+            position: fixed;
+            top: calc(max(10px, env(safe-area-inset-top)) + 36px);
+            bottom: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            border-radius: 30px;
+            box-shadow: 0 6px 16px rgba(37, 117, 252, 0.45);
+            z-index: 51;
+            display: none;
+            cursor: pointer;
+        }
+        .sound-btn.show {
+            display: block;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sokin fon musiqasi -->
+    <audio id="bgMusic" loop preload="auto" playsinline>
+        <source src="./bgmusic.m4a" type="audio/mp4">
+    </audio>
+
+    <!-- Diagnostics: audio status and fallback "Enable sound" button -->
+    <div class="audio-status" id="audioStatus"></div>
+    <button class="sound-btn" id="soundBtn" onclick="enableSoundManually()">🔊 Enable sound</button>
+
+    <!-- Yulduzlar konteyneri -->
+    <div class="stars" id="starsContainer"></div>
+    <div id="particlesContainer"></div>
+
+    <div class="container">
+        <!-- 1-Qism: Boshlang'ich oynasi -->
+        <div class="welcome-page" id="welcomePage">
+            <h1>Happy Birthday!</h1>
+            <p class="subtitle">There's a secret letter written from the heart, just for you...</p>
+            <button class="magic-btn" id="openBtn" onclick="openLetter()">Open the letter ✨</button>
+        </div>
+
+        <!-- 2-Qism: Portlab ochiladigan Maktub sahifasi -->
+        <div class="letter-page" id="letterPage">
+            <div class="letter-card" id="letterCard">
+                <h2>For someone truly dear,</h2>
+                <div class="letter-text" id="letterText"></div>
+                <div class="signature" id="signature">With endless love and warmth, Sevinch</div>
+            </div>
+            <button class="back-btn" onclick="closeLetter()">Go back ↩</button>
+        </div>
+    </div>
+
+    <script>
+        /* ===================== YULDUZLI FON ===================== */
+        const starsContainer = document.getElementById('starsContainer');
+        const starTints = [
+            { c: '255,255,255' },
+            { c: '255,222,179' },
+            { c: '255,190,214' },
+            { c: '200,220,255' }
+        ];
+
+        for (let i = 0; i < 130; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('star-dot');
+            dot.style.left = `${Math.random() * 100}%`;
+            dot.style.top = `${Math.random() * 100}%`;
+
+            const size = 1.2 + Math.random() * 2.2;
+            dot.style.width = `${size}px`;
+            dot.style.height = `${size}px`;
+
+            const tint = starTints[Math.floor(Math.random() * starTints.length)].c;
+            dot.style.background = `rgba(${tint}, 1)`;
+            dot.style.boxShadow = `0 0 ${3 + size}px rgba(${tint}, 0.9)`;
+
+            dot.style.setProperty('--duration', `${2.5 + Math.random() * 3.5}s`);
+            dot.style.setProperty('--delay', `${Math.random() * 4}s`);
+            starsContainer.appendChild(dot);
+        }
+
+        for (let i = 0; i < 14; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star-sparkle');
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+
+            const size = 4 + Math.random() * 7;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+
+            const tint = starTints[Math.floor(Math.random() * starTints.length)].c;
+            star.style.background = `rgba(${tint}, 1)`;
+            star.style.filter = `drop-shadow(0 0 ${3 + size / 3}px rgba(${tint}, 0.85))`;
+
+            star.style.setProperty('--duration', `${3 + Math.random() * 3}s`);
+            star.style.setProperty('--delay', `${Math.random() * 4}s`);
+            starsContainer.appendChild(star);
+        }
+
+        /* ===================== SAHIFA ELEMENTLARI ===================== */
+        const welcomePage = document.getElementById('welcomePage');
+        const letterPage = document.getElementById('letterPage');
+        const openBtn = document.getElementById('openBtn');
+        const particlesContainer = document.getElementById('particlesContainer');
+        const letterTextElem = document.getElementById('letterText');
+        const letterCardElem = document.getElementById('letterCard');
+        const signatureElem = document.getElementById('signature');
+        const bgMusic = document.getElementById('bgMusic');
+
+        /* ===================== SHE'R MATNI (INGLIZCHA) ===================== */
+        const poemLines = [
+            "Happy birthday, bro!",
+            "I hope today feels a little different —",
+            "full of good people,",
+            "genuine smiles,",
+            "and",
+            "moments you'll want to remember.",
+            "I hope this new year of your life brings you",
+            "beautiful memories,",
+            "unexpected happiness,",
+            "and",
+            "many little moments that",
+            "make life feel worth it.",
+            "Some people come into our lives",
+            "and simply become a part of our memories,",
+            "and I'm genuinely glad",
+            "you're one of them.",
+            "Wishing you a beautiful birthday",
+            "and a year filled with moments",
+            "that feel like home."
+        ];
+
+        let activeTimeouts = [];
+        function setTO(fn, delay) {
+            const id = setTimeout(fn, delay);
+            activeTimeouts.push(id);
+            return id;
+        }
+        function clearAllTimeouts() {
+            activeTimeouts.forEach(id => clearTimeout(id));
+            activeTimeouts = [];
+        }
+
+        let isReading = false;
+        let readingToken = 0;
+
+        function createExplosion() {
+            const rect = openBtn.getBoundingClientRect();
+            const startX = rect.left + rect.width / 2;
+            const startY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                const size = 4 + Math.random() * 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                const colors = ['#ff7eb3', '#ff758c', '#ffffff', '#ffd700', '#2575fc'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                particle.style.left = `${startX}px`;
+                particle.style.top = `${startY}px`;
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 70 + Math.random() * 150;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+
+                particle.style.animation = `explode 0.7s ease-out forwards`;
+                particlesContainer.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 700);
+            }
+        }
+
+        /* ===================== AUDIO DIAGNOSTIKASI ===================== */
+        const audioStatus = document.getElementById('audioStatus');
+        const soundBtn = document.getElementById('soundBtn');
+        let statusHideTO = null;
+
+        function setStatus(msg, autoHide) {
+            audioStatus.textContent = msg;
+            audioStatus.classList.add('show');
+            console.log('[Audio debug]', msg);
+            clearTimeout(statusHideTO);
+            if (autoHide) {
+                statusHideTO = setTimeout(() => audioStatus.classList.remove('show'), 3500);
+            }
+        }
+
+        // If the file fails to load or decode at all — show the exact reason
+        bgMusic.addEventListener('error', () => {
+            const err = bgMusic.error;
+            let reason = 'Unknown error';
+            if (err) {
+                switch (err.code) {
+                    case 1: reason = 'Loading was aborted (ABORTED)'; break;
+                    case 2: reason = 'Network error: bgmusic.m4a not found or failed to load (check it\'s in the same folder as index.html)'; break;
+                    case 3: reason = 'File could not be decoded (DECODE_ERROR) — the m4a may be corrupted'; break;
+                    case 4: reason = 'Source not supported (SRC_NOT_SUPPORTED) — bgmusic.m4a is missing from this folder or the browser can\'t open it'; break;
+                }
+            }
+            setStatus('❌ ' + reason, false);
+            soundBtn.classList.add('show');
+        });
+
+        function rampVolume() {
+            clearVolumeFade();
+            let vol = bgMusic.volume || 0;
+            volumeFadeInterval = setInterval(() => {
+                vol += 0.006;
+                if (vol >= 0.14) {
+                    vol = 0.14;
+                    clearVolumeFade();
+                }
+                try { bgMusic.volume = vol; } catch (e) { clearVolumeFade(); }
+            }, 140);
+        }
+
+        let musicStarted = false;
+        let volumeFadeInterval = null;
+
+        function clearVolumeFade() {
+            if (volumeFadeInterval) {
+                clearInterval(volumeFadeInterval);
+                volumeFadeInterval = null;
+            }
+        }
+
+        function tryStartMusic() {
+            if (musicStarted) return;
+            bgMusic.volume = 0;
+            const playPromise = bgMusic.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    musicStarted = true;
+                    setStatus('✅ Music is playing', true);
+                    soundBtn.classList.remove('show');
+                    rampVolume();
+                }).catch(err => {
+                    // Autoplay was blocked — retry on the first tap/click
+                    setStatus('⚠️ Autoplay blocked: ' + err.name + ' — it will start on your first tap', false);
+                    soundBtn.classList.add('show');
+                });
+            } else {
+                musicStarted = true;
+                rampVolume();
+            }
+        }
+
+        // Try to start the music as soon as the page loads
+        tryStartMusic();
+
+        // If the browser blocks autoplay, start it on the user's first tap/click
+        ['click', 'touchstart', 'keydown'].forEach(evt => {
+            document.addEventListener(evt, function onFirstInteract() {
+                tryStartMusic();
+            }, { once: true, passive: true });
+        });
+
+        function enableSoundManually() {
+            clearVolumeFade();
+            bgMusic.volume = 0.14;
+            bgMusic.play().then(() => {
+                musicStarted = true;
+                setStatus('✅ Music is playing', true);
+                soundBtn.classList.remove('show');
+            }).catch(err => {
+                setStatus('❌ Still couldn\'t play: ' + err.name + ' — ' + err.message, false);
+            });
+        }
+
+        function fadeOutMusic() {
+            clearVolumeFade();
+            let vol = bgMusic.volume;
+            volumeFadeInterval = setInterval(() => {
+                vol -= 0.03;
+                if (vol <= 0) {
+                    vol = 0;
+                    clearVolumeFade();
+                    bgMusic.pause();
+                    bgMusic.currentTime = 0;
+                }
+                try { bgMusic.volume = vol; } catch (e) { clearVolumeFade(); bgMusic.pause(); }
+            }, 60);
+        }
+
+        function openLetter() {
+            createExplosion();
+            tryStartMusic();
+
+            setTimeout(() => {
+                welcomePage.classList.add('hidden');
+                letterPage.classList.add('active');
+
+                if (!isReading) {
+                    isReading = true;
+                    setTO(() => startReadingEffect(readingToken), 1200);
+                }
+            }, 200);
+        }
+
+        function buildLine(text) {
+            const lineEl = document.createElement('div');
+            lineEl.classList.add('poem-line');
+
+            const spans = [];
+            for (const ch of text) {
+                const span = document.createElement('span');
+                span.classList.add('poem-char');
+                span.textContent = ch;
+                lineEl.appendChild(span);
+                spans.push(span);
+            }
+
+            letterTextElem.appendChild(lineEl);
+            return { lineEl, spans };
+        }
+
+        function showFullLetter(token) {
+            const wrap = document.createElement('div');
+            wrap.classList.add('full-letter');
+            poemLines.forEach(line => {
+                const p = document.createElement('div');
+                p.textContent = line;
+                wrap.appendChild(p);
+            });
+
+            letterTextElem.innerHTML = '';
+            letterTextElem.appendChild(wrap);
+
+            requestAnimationFrame(() => {
+                setTO(() => {
+                    if (token !== readingToken) return;
+                    wrap.classList.add('visible');
+                }, 30);
+            });
+
+            setTO(() => {
+                if (token !== readingToken) return;
+                signatureElem.classList.add('visible');
+
+                // Imzo ko'rinishi uchun bir martalik, silliq tarzda pastga tushamiz.
+                // Bu faqat shu paytda sodir bo'ladi — foydalanuvchi keyin tepaga qaytarishi mumkin,
+                // hech qanday keyingi majburiy scroll yo'q.
+                if (letterCardElem) {
+                    letterCardElem.scrollTo({ top: letterCardElem.scrollHeight, behavior: 'smooth' });
+                }
+            }, 1300);
+        }
+
+        function startReadingEffect(token) {
+            let index = 0;
+
+            function revealChars(spans, onDone) {
+                let i = 0;
+                function nextChar() {
+                    if (token !== readingToken) return;
+
+                    if (i < spans.length) {
+                        spans[i].classList.add('char-read');
+                        const ch = spans[i].textContent;
+                        i++;
+
+                        let speed = 42; // normal o'qish tezligi, harf-baharf chapdan o'ngga
+                        if (ch === '.' || ch === '!' || ch === ',' || ch === '—') {
+                            speed = 360;
+                        }
+
+                        setTO(nextChar, speed);
+                    } else {
+                        onDone();
+                    }
+                }
+                nextChar();
+            }
+
+            function playLine() {
+                if (token !== readingToken) return;
+
+                if (index >= poemLines.length) {
+                    setTO(() => showFullLetter(token), 300);
+                    return;
+                }
+
+                letterTextElem.innerHTML = '';
+                const { lineEl, spans } = buildLine(poemLines[index]);
+
+                // Gap teng ravishda, silliq paydo bo'ladi
+                requestAnimationFrame(() => {
+                    setTO(() => {
+                        if (token !== readingToken) return;
+                        lineEl.classList.add('line-visible');
+                    }, 30);
+                });
+
+                const entranceDuration = 550;
+
+                setTO(() => {
+                    if (token !== readingToken) return;
+                    revealChars(spans, () => {
+                        // Gap to'liq o'qildi — endi tezroq yo'qoladi va keyingisiga o'tadi
+                        setTO(() => {
+                            if (token !== readingToken) return;
+                            lineEl.classList.remove('line-visible');
+                            lineEl.classList.add('line-exit');
+                        }, 350);
+
+                        setTO(() => {
+                            if (token !== readingToken) return;
+                            index++;
+                            playLine();
+                        }, 350 + 550);
+                    });
+                }, entranceDuration);
+            }
+
+            playLine();
+        }
+
+        function closeLetter() {
+            readingToken++;
+            clearAllTimeouts();
+            isReading = false;
+            musicStarted = false;
+            letterTextElem.innerHTML = '';
+            signatureElem.classList.remove('visible');
+
+            fadeOutMusic();
+
+            welcomePage.classList.remove('hidden');
+            letterPage.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
